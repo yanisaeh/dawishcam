@@ -1,50 +1,104 @@
-# [PROJECT_NAME] Constitution
-<!-- Example: Spec Constitution, TaskFlow Constitution, etc. -->
+<!--
+Sync Impact Report
+------------------
+Version change: Initial Adoption -> 1.0.0
+List of modified principles:
+  - PRINCIPLE_1_NAME -> I. Experimental & Empirically Verified Capabilities (NON-NEGOTIABLE)
+  - PRINCIPLE_2_NAME -> II. Architectural Decoupling: Flutter UI, Native Swift & Processing Layers
+  - PRINCIPLE_3_NAME -> III. RAW-Only Capture & Strict Minimal Processing Pipeline
+  - PRINCIPLE_4_NAME -> IV. Pragmatic Performance & Measurement-Driven GPU Adoption
+  - PRINCIPLE_5_NAME -> V. Minimal Manual Controls & Strict Flash Behavior
+Added sections:
+  - Technical Stack & Hardware Boundaries
+  - Development Workflow & Quality Gates
+Removed sections: None
+Follow-up TODOs: None
+-->
+
+# DaWishCam Constitution
 
 ## Core Principles
 
-### [PRINCIPLE_1_NAME]
-<!-- Example: I. Library-First -->
-[PRINCIPLE_1_DESCRIPTION]
-<!-- Example: Every feature starts as a standalone library; Libraries must be self-contained, independently testable, documented; Clear purpose required - no organizational-only libraries -->
+### I. Experimental & Empirically Verified Capabilities (NON-NEGOTIABLE)
 
-### [PRINCIPLE_2_NAME]
-<!-- Example: II. CLI Interface -->
-[PRINCIPLE_2_DESCRIPTION]
-<!-- Example: Every library exposes functionality via CLI; Text in/out protocol: stdin/args → stdout, errors → stderr; Support JSON + human-readable formats -->
+Hardware and software capabilities of the iPhone 14 and AVFoundation MUST be proven experimentally before technical choices are considered established:
 
-### [PRINCIPLE_3_NAME]
-<!-- Example: III. Test-First (NON-NEGOTIABLE) -->
-[PRINCIPLE_3_DESCRIPTION]
-<!-- Example: TDD mandatory: Tests written → User approved → Tests fail → Then implement; Red-Green-Refactor cycle strictly enforced -->
+- Hardware, sensor, or API capabilities that have not been experimentally verified on physical hardware MUST NOT be considered available.
+- Every architectural assumption regarding Bayer RAW capture formats, manual parameter ranges, and pipeline throughput MUST be validated through targeted device tests.
+- Design choices MUST adapt to observed device behavior rather than theoretical API documentation.
+  _Rationale_: AVFoundation hardware abstractions and sensor capabilities vary across iPhone models. Building on unverified assumptions risks late-stage architectural failures.
 
-### [PRINCIPLE_4_NAME]
-<!-- Example: IV. Integration Testing -->
-[PRINCIPLE_4_DESCRIPTION]
-<!-- Example: Focus areas requiring integration tests: New library contract tests, Contract changes, Inter-service communication, Shared schemas -->
+### II. Architectural Decoupling: Flutter UI, Native Swift & Processing Layers
 
-### [PRINCIPLE_5_NAME]
-<!-- Example: V. Observability, VI. Versioning & Breaking Changes, VII. Simplicity -->
-[PRINCIPLE_5_DESCRIPTION]
-<!-- Example: Text I/O ensures debuggability; Structured logging required; Or: MAJOR.MINOR.BUILD format; Or: Start simple, YAGNI principles -->
+The system architecture MUST enforce strict boundaries between five distinct subsystems:
 
-## [SECTION_2_NAME]
-<!-- Example: Additional Constraints, Security Requirements, Performance Standards, etc. -->
+- **Flutter UI**: Responsible exclusively for presentation, controls display, and high-level application flow.
+- **Bridge Layer**: Platform interface (Method/Event Channels, Pigeon, or FFI) facilitating typed, decoupled communication between Dart and native code.
+- **Native Camera Layer**: Swift implementation interfacing directly with AVFoundation (`AVCaptureSession`, `AVCaptureDevice`).
+- **RAW Capture Layer**: Native logic dedicated strictly to acquiring uncompressed raw sensor buffers.
+- **RAW Processing Pipeline**: Dedicated image processing pipeline operating independently of the camera lifecycle.
+  _Rationale_: Strict separation isolates native AVFoundation lifecycle subtleties from cross-platform UI state, keeping the experimental codebase modular and maintainable.
 
-[SECTION_2_CONTENT]
-<!-- Example: Technology stack requirements, compliance standards, deployment policies, etc. -->
+### III. RAW-Only Capture & Strict Minimal Processing Pipeline
 
-## [SECTION_3_NAME]
-<!-- Example: Development Workflow, Review Process, Quality Gates, etc. -->
+The capture and processing pipeline MUST remain minimal, direct, and unencumbered by post-processing:
 
-[SECTION_3_CONTENT]
-<!-- Example: Code review requirements, testing gates, deployment approval process, etc. -->
+- Still captures MUST be acquired in Bayer RAW when hardware and AVFoundation permit.
+- The MVP MUST NOT generate or persist JPEG images.
+- The minimal processing pipeline is strictly defined as: `Bayer RAW → Demosaicing → RGB → Preview at 24 FPS`.
+- The live preview MUST be rendered at 24 FPS. Sensor FPS MUST NOT be exposed as a user-configurable setting.
+- Custom white balance, advanced colorimetric transformations, custom Log curves, noise reduction, sharpening, and HDR are strictly excluded from the MVP.
+  _Rationale_: Preserves raw sensor fidelity, simplifies debugging, and avoids premature complexity in color science before basic capture and demosaicing are solid.
+
+### IV. Pragmatic Performance & Measurement-Driven GPU Adoption
+
+Algorithmic correctness on CPU strictly precedes GPU acceleration:
+
+- Demosaicing and image conversion algorithms MUST first have a correct, verified CPU implementation.
+- Metal / GPU compute shaders MUST ONLY be introduced when empirical performance profiling demonstrates an explicit necessity.
+- Optimization efforts MUST be guided by reproducible performance benchmarks, not premature speculation.
+  _Rationale_: A correct CPU baseline provides an indisputable reference for numerical correctness, image quality, and benchmarking before introducing shader complexity.
+
+### V. Minimal Manual Controls & Strict Flash Behavior
+
+The MVP remains strictly scoped to essential manual photographic controls:
+
+- User controls are limited to manual ISO, manual shutter speed (exposure duration), manual focus, and a flash toggle.
+- Flash illumination rules MUST be strictly respected:
+  - When flash is enabled: the flash MUST fire ONLY during still photography capture and MUST NEVER act as continuous illumination (torch) during preview.
+  - When flash is disabled: no flash activation of any kind may occur during capture.
+- No out-of-scope camera features or secondary settings may be added to the MVP.
+  _Rationale_: Keeps the experimental scope tightly focused on core manual camera mechanics without scope creep.
+
+## Technical Stack & Hardware Boundaries
+
+The project standardizes on the following technologies, constraints, and platform scope:
+
+- **Target Platform**: Apple iOS on iPhone 14.
+- **Application Layer**: Flutter / Dart managing interface layout and high-level application state.
+- **Camera Subsystem**: Swift utilizing AVFoundation (`AVCaptureDeviceInput`, `AVCapturePhotoOutput` with RAW capture settings).
+- **Processing Engine**: CPU-first demosaicing (pure Swift / C++), deferring Metal until demonstrated necessary.
+- **Preview Cadence**: Fixed 24 FPS preview display pipeline.
+
+## Development Workflow & Quality Gates
+
+Development follows an incremental, empirical lifecycle:
+
+- **Incremental Evolution**: Features MUST be delivered in small, measurable increments consistent with project specifications and verified on device.
+- **Commit Standards**: All commits MUST adhere to the Conventional Commits specification (`feat:`, `fix:`, `docs:`, `refactor:`, `perf:`, `test:`, `chore:`).
 
 ## Governance
-<!-- Example: Constitution supersedes all other practices; Amendments require documentation, approval, migration plan -->
 
-[GOVERNANCE_RULES]
-<!-- Example: All PRs/reviews must verify compliance; Complexity must be justified; Use [GUIDANCE_FILE] for runtime development guidance -->
+This Constitution is the authoritative engineering reference for DaWishCam.
 
-**Version**: [CONSTITUTION_VERSION] | **Ratified**: [RATIFICATION_DATE] | **Last Amended**: [LAST_AMENDED_DATE]
-<!-- Example: Version: 2.1.1 | Ratified: 2025-06-13 | Last Amended: 2025-07-16 -->
+Implementations and specifications MUST remain consistent with these principles and the defined MVP scope.
+
+Any change to the Constitution MUST be justified by project requirements, verified technical findings, or necessary clarification of existing principles.
+
+The Constitution uses semantic versioning:
+
+- MAJOR: Foundational architectural or governance changes.
+- MINOR: Addition or expansion of project principles.
+- PATCH: Clarifications and non-semantic corrections.
+
+**Version**: 1.0.0 | **Ratified**: 2026-10-08 | **Last Amended**: 2026-10-08
