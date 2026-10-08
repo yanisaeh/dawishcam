@@ -31,7 +31,8 @@
 
 ## Notes
 
-- All validation checks passed on initial iteration.
+- All validation checks passed.
 - Specification strictly aligns with DaWishCam Constitution Principles I through V.
 - Bayer RAW acquisition and manual parameter ranges are properly constrained to experimental validation on physical target hardware.
+- iOS-inspired UX/UI intention added: dominant viewfinder, bottom shutter button, accessible flash, unobtrusive contextual manual control overlays.
 - The specification is complete and ready for planning (`/speckit-plan`).

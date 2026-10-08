@@ -10,19 +10,20 @@
 
 ## User Scenarios & Testing *(mandatory)*
 
-### User Story 1 - Live Viewfinder Preview at 24 FPS (Priority: P1)
+### User Story 1 - Live Viewfinder Preview at 24 FPS & iOS-Familiar Layout (Priority: P1)
 
-As a photographer, I want to open DaWishCam and view a live camera viewfinder preview rendered at 24 frames per second, so that I can frame and compose my scenes.
+As a photographer, I want to open DaWishCam and immediately view a live camera viewfinder rendered at 24 frames per second in an interface familiar to iOS camera users, where the viewfinder occupies the dominant area of the screen with a bottom-anchored shutter button and an accessible flash toggle, so that I can compose and frame my scenes intuitively without visual distraction.
 
-**Why this priority**: The live viewfinder preview is the foundational capability of the camera application, providing the visual feedback required to compose scenes and evaluate manual adjustments.
+**Why this priority**: The live viewfinder preview is the foundational capability of the camera application. Combining a steady 24 FPS stream with an intuitive, viewfinder-centric layout gives the photographer immediate visual feedback and effortless composition.
 
-**Independent Test**: Can be verified on a target device; the viewfinder successfully displays the live camera stream rendered at 24 FPS.
+**Independent Test**: Can be verified on a target device; launching the application displays the live camera stream rendered at 24 FPS occupying the majority of the screen, with the shutter button positioned in the lower interaction zone.
 
 **Acceptance Scenarios**:
 
 1. **Given** camera permissions are granted, **When** the app is launched, **Then** the camera initializes and displays the live viewfinder feed rendered at 24 frames per second.
-2. **Given** the live viewfinder preview is active, **When** the user views the stream, **Then** the preview is rendered at a target cadence of 24 FPS.
-3. **Given** the app is running, **When** inspecting available settings, **Then** the preview frame rate is fixed at 24 FPS and sensor FPS is not exposed as a user-configurable setting.
+2. **Given** the app is active, **When** viewing the screen layout, **Then** the viewfinder occupies the dominant portion of the screen, and the primary shutter capture button is positioned in the lower interaction zone following familiar iOS camera conventions.
+3. **Given** the live viewfinder preview is active, **When** the user views the stream, **Then** the preview is rendered at a target cadence of 24 FPS.
+4. **Given** the app is running, **When** inspecting available settings, **Then** the preview frame rate is fixed at 24 FPS and sensor FPS is not exposed as a user-configurable setting.
 
 ---
 
@@ -45,17 +46,17 @@ As a photographer, I want to trigger still capture to acquire a Bayer RAW photog
 
 ### User Story 3 - Essential Manual Photographic Controls & Flash (Priority: P3)
 
-As a photographer, I want to manually adjust ISO, shutter speed (exposure duration), lens focus position, and flash mode within experimentally verified hardware ranges, so that I have manual control over exposure parameters and flash behavior.
+As a photographer, I want to manually adjust ISO, shutter speed (exposure duration), lens focus position, and flash mode through discrete, non-intrusive controls integrated into the camera experience, so that I maintain manual creative authority over exposure parameters without transforming the screen into a permanent settings panel or obscuring the viewfinder.
 
-**Why this priority**: Essential manual controls allow deliberate photographic adjustments without automatic device overrides.
+**Why this priority**: Essential manual controls turn the camera into a deliberate photographic instrument while preserving an uncluttered viewfinder experience.
 
-**Independent Test**: Can be verified by adjusting ISO, shutter speed, focus controls, and toggling flash; the preview and captures reflect the manual adjustments within the device's experimentally verified operational ranges.
+**Independent Test**: Can be verified by adjusting ISO, shutter speed, focus controls, and toggling flash; the preview and captures reflect the manual adjustments within the device's experimentally verified operational ranges, and the controls can be adjusted without hiding the framed subject.
 
 **Acceptance Scenarios**:
 
-1. **Given** the viewfinder is active, **When** the user adjusts the ISO control, **Then** sensor ISO sensitivity updates according to experimentally verified hardware ranges.
-2. **Given** the viewfinder is active, **When** the user adjusts the shutter speed control, **Then** exposure duration updates according to experimentally verified hardware ranges.
-3. **Given** the viewfinder is active, **When** the user adjusts the focus control, **Then** lens focus position adjusts according to experimentally verified hardware ranges.
+1. **Given** the viewfinder is active, **When** the user views the camera interface, **Then** the flash control is readily accessible as an unobtrusive overlay control.
+2. **Given** the user wishes to adjust exposure or focus parameters, **When** invoking manual controls, **Then** ISO, shutter speed, and focus controls appear as discrete, contextual overlays that do not permanently replace the viewfinder with a settings panel.
+3. **Given** manual controls are adjusted, **When** the user adjusts ISO, shutter speed, or focus sliders, **Then** the sensor parameters update in real-time according to experimentally verified hardware ranges while keeping the viewfinder visible.
 4. **Given** the flash toggle is enabled, **When** still capture is triggered, **Then** the flash fires strictly during the still capture and never functions as a continuous torch during the live preview.
 5. **Given** the flash toggle is disabled, **When** still capture is triggered, **Then** no flash illumination occurs during preview or capture.
 
@@ -88,10 +89,15 @@ As a photographer, I want to manually adjust ISO, shutter speed (exposure durati
 - **FR-013**: System MUST enforce architectural decoupling between Flutter UI, Bridge Layer, Native Camera Layer, RAW Capture Layer, and RAW Processing Pipeline.
 - **FR-014**: System MUST persist acquired raw captures to storage with verifiable data integrity.
 - **FR-015**: System MUST provide visual feedback during still capture to notify the user of capture initiation and completion.
+- **FR-016**: The user interface MUST strongly draw inspiration from the native iOS Camera application experience and interaction conventions while remaining a distinct DaWishCam interface.
+- **FR-017**: The live viewfinder MUST occupy the dominant portion of the screen display area.
+- **FR-018**: The primary shutter capture button MUST be positioned in the lower interaction zone of the screen, following familiar iOS camera application layout.
+- **FR-019**: The flash toggle control MUST be readily accessible directly on the primary camera screen.
+- **FR-020**: Manual controls (ISO, shutter speed, focus) MUST be integrated as discrete, contextual overlays that do not transform the screen into a permanent settings panel or unnecessarily obscure the viewfinder.
 
 ### Key Entities *(include if feature involves data)*
 
-- **Camera Control State**: Encapsulates manual photographic parameters including target ISO value, target exposure duration, lens position value, and binary flash enablement state, bounded by experimentally validated ranges.
+- **Camera Control State**: Encapsulates manual photographic parameters including target ISO value, target exposure duration, lens position value, binary flash enablement state, and active manual control overlay state, bounded by experimentally validated ranges.
 - **Viewfinder Frame**: Represents a single RGB frame buffer rendered in the presentation UI at a target 24 FPS cadence.
 - **Bayer RAW Capture**: Represents an uncompressed sensor raw buffer and metadata acquired upon capture, persisted to storage and demosaiced on CPU for preview.
 
@@ -105,6 +111,7 @@ As a photographer, I want to manually adjust ISO, shutter speed (exposure durati
 - **SC-004**: Manual ISO, exposure duration, and focus adjustments modify native camera device parameters within experimentally verified ranges.
 - **SC-005**: In flash-enabled captures, the flash illuminates exclusively at the capture instant with zero torch illumination during viewfinder preview.
 - **SC-006**: The system cleanly handles lifecycle transitions (backgrounding, foregrounding, capture initiation, capture completion) without application crashes.
+- **SC-007**: The viewfinder remains unobstructed as the dominant visual element across all shooting states, with manual controls accessible as overlays without navigating away from the camera screen.
 
 ## Assumptions
 
@@ -114,3 +121,4 @@ As a photographer, I want to manually adjust ISO, shutter speed (exposure durati
 - **Fixed Preview Cadence**: The 24 FPS preview cadence is an architectural standard for DaWishCam and will remain invariant.
 - **CPU-First Processing**: In accordance with Constitution Principle IV, demosaicing algorithms are initially implemented and verified on the CPU before introducing Metal/GPU compute shaders.
 - **Storage Management**: Raw capture storage location will be determined in accordance with platform file system permissions and sandboxing requirements.
+- **UI/UX Paradigm**: Native iOS camera conventions guide the visual hierarchy and ergonomics (bottom shutter button, unobtrusive overlays, dominant viewfinder) without replicating proprietary iOS features outside the MVP scope.
