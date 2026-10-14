@@ -7,10 +7,15 @@ import UIKit
     _ application: UIApplication,
     didFinishLaunchingWithOptions launchOptions: [UIApplication.LaunchOptionsKey: Any]?
   ) -> Bool {
-    return super.application(application, didFinishLaunchingWithOptions: launchOptions)
+    let result = super.application(application, didFinishLaunchingWithOptions: launchOptions)
+    if let registrar = self.registrar(forPlugin: "CameraBridgePlugin") {
+      CameraBridgePlugin.register(with: registrar)
+    }
+    return result
   }
 
   func didInitializeImplicitFlutterEngine(_ engineBridge: FlutterImplicitEngineBridge) {
     GeneratedPluginRegistrant.register(with: engineBridge.pluginRegistry)
+    CameraBridgePlugin.register(with: engineBridge.pluginRegistry.registrar(forPlugin: "CameraBridgePlugin"))
   }
 }

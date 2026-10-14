@@ -7,9 +7,9 @@
 
 **Purpose**: Initialisation du projet et mise en place de l'arborescence
 
-- [ ] T001 Créer l'arborescence des dossiers du projet dans `lib/src/bridge/`, `lib/src/ui/` et `ios/Runner/Camera/`
-- [ ] T002 [P] Mettre à jour les dépendances et assets du projet dans `pubspec.yaml`
-- [ ] T003 [P] Configurer les autorisations caméra iOS (`NSCameraUsageDescription`) dans `ios/Runner/Info.plist`
+- [X] T001 Créer l'arborescence des dossiers du projet dans `lib/src/bridge/`, `lib/src/ui/` et `ios/Runner/Camera/`
+- [X] T002 [P] Mettre à jour les dépendances et assets du projet dans `pubspec.yaml`
+- [X] T003 [P] Configurer les autorisations caméra iOS (`NSCameraUsageDescription`) dans `ios/Runner/Info.plist`
 
 ---
 
@@ -17,10 +17,10 @@
 
 **Purpose**: Infrastructure de communication et modèles partagés indispensables aux User Stories
 
-- [ ] T004 [P] Implémenter les modèles de données Dart (`CameraDeviceInfo`, `CameraControlState`, `ViewfinderStreamState`, `RawCaptureResult`) dans `lib/src/bridge/camera_models.dart` avec champs dynamiques découverts
-- [ ] T005 [P] Implémenter le wrapper Flutter `MethodChannel` et `EventChannel` dans `lib/src/bridge/camera_bridge.dart` conformément au contrat `contracts/camera-channel.md`
-- [ ] T006 [P] Implémenter le plugin natif Swift `CameraBridgePlugin` dans `ios/Runner/Camera/CameraBridgePlugin.swift` pour écouter les canaux `com.dawishcam/camera` et `com.dawishcam/camera_events`
-- [ ] T007 Enregistrer `CameraBridgePlugin` dans `ios/Runner/AppDelegate.swift`
+- [X] T004 [P] Implémenter les modèles de données Dart (`CameraDeviceInfo`, `CameraControlState`, `ViewfinderStreamState`, `RawCaptureResult`) dans `lib/src/bridge/camera_models.dart` avec champs dynamiques découverts
+- [X] T005 [P] Implémenter le wrapper Flutter `MethodChannel` et `EventChannel` dans `lib/src/bridge/camera_bridge.dart` conformément au contrat `contracts/camera-channel.md`
+- [X] T006 [P] Implémenter le plugin natif Swift `CameraBridgePlugin` dans `ios/Runner/Camera/CameraBridgePlugin.swift` pour écouter les canaux `com.dawishcam/camera` et `com.dawishcam/camera_events`
+- [X] T007 Enregistrer `CameraBridgePlugin` dans `ios/Runner/AppDelegate.swift`
 
 **Checkpoint**: Socle de communication en place — le développement des User Stories peut débuter
 
@@ -34,12 +34,12 @@
 
 ### Implementation for User Story 1
 
-- [ ] T008 [P] [US1] Implémenter la session caméra native `CameraSessionController` dans `ios/Runner/Camera/CameraSessionController.swift` (réception du flux `AVCaptureVideoDataOutput`, régulation temporelle de la présentation du preview à 24 FPS vers `FlutterTexture`, sans imposer de cadence matérielle au capteur et sans exposer de réglage framerate)
-- [ ] T009 [US1] Raccorder `CameraSessionController` à `CameraBridgePlugin.swift` pour gérer les appels `initializeCamera()`, `pausePreview()` et `resumePreview()`
-- [ ] T010 [P] [US1] Implémenter le widget de rendu du viseur `ViewfinderWidget` dans `lib/src/ui/viewfinder_widget.dart` intégrant la `Texture` Flutter
-- [ ] T011 [P] [US1] Implémenter la barre de capture inférieure avec le bouton déclencheur dans `lib/src/ui/capture_controls_widget.dart`
-- [ ] T012 [US1] Assembler l'écran principal de prise de vue dans `lib/src/ui/camera_screen.dart` (mise en page dominée par le viseur, barre inférieure et barre supérieure d'état)
-- [ ] T013 [US1] Mettre à jour `lib/main.dart` pour initialiser `CameraScreen` avec gestion des permissions caméra
+- [X] T008 [P] [US1] Implémenter la session caméra native `CameraSessionController` dans `ios/Runner/Camera/CameraSessionController.swift` (réception du flux `AVCaptureVideoDataOutput`, régulation temporelle de la présentation du preview à 24 FPS vers `FlutterTexture`, sans imposer de cadence matérielle au capteur et sans exposer de réglage framerate)
+- [X] T009 [US1] Raccorder `CameraSessionController` à `CameraBridgePlugin.swift` pour gérer les appels `initializeCamera()`, `pausePreview()` et `resumePreview()`
+- [X] T010 [P] [US1] Implémenter le widget de rendu du viseur `ViewfinderWidget` dans `lib/src/ui/viewfinder_widget.dart` intégrant la `Texture` Flutter
+- [X] T011 [P] [US1] Implémenter la barre de capture inférieure avec le bouton déclencheur dans `lib/src/ui/capture_controls_widget.dart`
+- [X] T012 [US1] Assembler l'écran principal de prise de vue dans `lib/src/ui/camera_screen.dart` (mise en page dominée par le viseur, barre inférieure et barre supérieure d'état)
+- [X] T013 [US1] Mettre à jour `lib/main.dart` pour initialiser `CameraScreen` avec gestion des permissions caméra
 
 **Checkpoint**: User Story 1 opérationnelle et testable de façon autonome (MVP fonctionnel)
 
@@ -53,10 +53,10 @@
 
 ### Implementation for User Story 2
 
-- [ ] T014 [P] [US2] Implémenter l'algorithme de dématriçage bilinéaire sur CPU dans `ios/Runner/Camera/CpuBilinearDemosaicer.swift` (Bayer CFA → dématriçage CPU → RGB → preview, sans virage, ni netteté, ni réduction de bruit, ni HDR, ni balance des blancs personnalisée, sans imposer de contrainte 8 bits a priori)
-- [ ] T015 [P] [US2] Implémenter le service de capture photo dans `ios/Runner/Camera/RawPhotoCaptureService.swift` (interrogation `availableRawPhotoPixelFormatTypes` et `isBayerRAWPixelFormat(_:)`, capture RAW via `AVCapturePhotoOutput`, persistance du fichier brut, appel au dématriceur CPU, gestion de l'erreur `RAW_UNAVAILABLE`)
-- [ ] T016 [US2] Raccorder `RawPhotoCaptureService` à `CameraBridgePlugin.swift` pour la méthode `captureBayerRaw()` et la diffusion des événements de progression de capture
-- [ ] T017 [US2] Implémenter le déclenchement de prise de vue et l'animation de retour visuel dans `lib/src/ui/capture_controls_widget.dart` et `lib/src/ui/camera_screen.dart`
+- [X] T014 [P] [US2] Implémenter l'algorithme de dématriçage bilinéaire sur CPU dans `ios/Runner/Camera/CpuBilinearDemosaicer.swift` (Bayer CFA → dématriçage CPU → RGB → preview, sans virage, ni netteté, ni réduction de bruit, ni HDR, ni balance des blancs personnalisée, sans imposer de contrainte 8 bits a priori)
+- [X] T015 [P] [US2] Implémenter le service de capture photo dans `ios/Runner/Camera/RawPhotoCaptureService.swift` (interrogation `availableRawPhotoPixelFormatTypes` et `isBayerRAWPixelFormat(_:)`, capture RAW via `AVCapturePhotoOutput`, persistance du fichier brut, appel au dématriceur CPU, gestion de l'erreur `RAW_UNAVAILABLE`)
+- [X] T016 [US2] Raccorder `RawPhotoCaptureService` à `CameraBridgePlugin.swift` pour la méthode `captureBayerRaw()` et la diffusion des événements de progression de capture
+- [X] T017 [US2] Implémenter le déclenchement de prise de vue et l'animation de retour visuel dans `lib/src/ui/capture_controls_widget.dart` et `lib/src/ui/camera_screen.dart`
 
 **Checkpoint**: User Stories 1 et 2 complètes et testables indépendamment
 
@@ -70,11 +70,11 @@
 
 ### Implementation for User Story 3
 
-- [ ] T018 [P] [US3] Implémenter la découverte dynamique des plages matérielles et les réglages manuels dans `ios/Runner/Camera/CameraSessionController.swift` (`minISO`/`maxISO`, durée d'exposition, focus verrouillé, présence du flash)
-- [ ] T019 [US3] Configurer le flash au niveau de la capture RAW dans `ios/Runner/Camera/RawPhotoCaptureService.swift` selon la capacité découverte (signaler indisponibilité si aucun flash et ne pas tenter d'activation, activer uniquement au déclencheur si disponible, interdire strictement `torchMode` en preview)
-- [ ] T020 [US3] Exposer les méthodes de réglages manuels (`setManualIso`, `setManualExposure`, `setManualFocus`, `setFlashMode`) dans `ios/Runner/Camera/CameraBridgePlugin.swift`
-- [ ] T021 [P] [US3] Implémenter les curseurs contextuels discrets en surimpression dans `lib/src/ui/manual_controls_overlay.dart` pour l'ISO, la vitesse et le focus
-- [ ] T022 [US3] Intégrer le bouton de flash accessible et les surimpressions de réglages manuels dans `lib/src/ui/camera_screen.dart`
+- [X] T018 [P] [US3] Implémenter la découverte dynamique des plages matérielles et les réglages manuels dans `ios/Runner/Camera/CameraSessionController.swift` (`minISO`/`maxISO`, durée d'exposition, focus verrouillé, présence du flash)
+- [X] T019 [US3] Configurer le flash au niveau de la capture RAW dans `ios/Runner/Camera/RawPhotoCaptureService.swift` selon la capacité découverte (signaler indisponibilité si aucun flash et ne pas tenter d'activation, activer uniquement au déclencheur si disponible, interdire strictement `torchMode` en preview)
+- [X] T020 [US3] Exposer les méthodes de réglages manuels (`setManualIso`, `setManualExposure`, `setManualFocus`, `setFlashMode`) dans `ios/Runner/Camera/CameraBridgePlugin.swift`
+- [X] T021 [P] [US3] Implémenter les curseurs contextuels discrets en surimpression dans `lib/src/ui/manual_controls_overlay.dart` pour l'ISO, la vitesse et le focus
+- [X] T022 [US3] Intégrer le bouton de flash accessible et les surimpressions de réglages manuels dans `lib/src/ui/camera_screen.dart`
 
 **Checkpoint**: Toutes les User Stories sont complètes et fonctionnelles
 
@@ -84,9 +84,9 @@
 
 **Purpose**: Gestion du cycle de vie, robustesse et validation de bout en bout
 
-- [ ] T023 [P] Implémenter les observateurs de cycle de vie de l'application (mise en pause et reprise propre de la caméra) dans `lib/src/ui/camera_screen.dart` et `ios/Runner/Camera/CameraSessionController.swift`
-- [ ] T024 [P] Écrire les tests unitaires pour les modèles de données dans `test/camera_models_test.dart` (validation des limites dynamiques de `CameraDeviceInfo`, comportement aux bornes découvertes et rejet des valeurs hors plage, sans valeurs matérielles fixes inventées)
-- [ ] T025 Exécuter les 4 scénarios de validation empirique sur iPhone 14 physique décrits dans `specs/001-complete-camera-mvp/quickstart.md`
+- [X] T023 [P] Implémenter les observateurs de cycle de vie de l'application (mise en pause et reprise propre de la caméra) dans `lib/src/ui/camera_screen.dart` et `ios/Runner/Camera/CameraSessionController.swift`
+- [X] T024 [P] Écrire les tests unitaires pour les modèles de données dans `test/camera_models_test.dart` (validation des limites dynamiques de `CameraDeviceInfo`, comportement aux bornes découvertes et rejet des valeurs hors plage, sans valeurs matérielles fixes inventées)
+- [X] T025 Exécuter les 4 scénarios de validation empirique sur iPhone 14 physique décrits dans `specs/001-complete-camera-mvp/quickstart.md`
 
 ---
 
